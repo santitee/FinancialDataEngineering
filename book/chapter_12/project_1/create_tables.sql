@@ -1,20 +1,20 @@
 -- CustomerStatusType
 CREATE TABLE CustomerStatusType (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(10) NOT NULL,
     description VARCHAR(50) NOT NULL
 );
 
 -- AccountStatusType
 CREATE TABLE LoanStatusType (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(10) NOT NULL,
     description VARCHAR(50) NOT NULL
 );
 
 -- Branch
 CREATE TABLE Branch (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     address VARCHAR(100) NOT NULL,
     phone_number VARCHAR(20) NOT NULL
@@ -22,7 +22,7 @@ CREATE TABLE Branch (
 
 -- Employee
 CREATE TABLE Employee (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     branch_id INT NOT NULL REFERENCES Branch(id),
     name VARCHAR(50) NOT NULL,
     position VARCHAR(20) NOT NULL
@@ -30,42 +30,42 @@ CREATE TABLE Employee (
 
 -- CustomerType
 CREATE TABLE CustomerType (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     description VARCHAR(50) NOT NULL
 );
 
 -- TransactionType
 CREATE TABLE TransactionType (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     description VARCHAR(50) NOT NULL
 );
 
 -- AccountType
 CREATE TABLE AccountType (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     description VARCHAR(50) NOT NULL
 );
 
 -- AccountStatusType
 CREATE TABLE AccountStatusType (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(10) NOT NULL,
     description VARCHAR(50) NOT NULL
 );
 
 -- CardType
 CREATE TABLE CardType (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(30) NOT NULL,
     description VARCHAR(100) NOT NULL
 );
 
 -- LoanType
 CREATE TABLE LoanType (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     description VARCHAR(50) NOT NULL
 );
@@ -104,7 +104,7 @@ CREATE TABLE Account (
 CREATE TABLE Loan (
     id SERIAL PRIMARY KEY,
     customer_id INT NOT NULL REFERENCES Customer(id),
-    load_type_id INT NOT NULL REFERENCES LoanType(id),
+    loan_type_id INT NOT NULL REFERENCES LoanType(id),
     amount DECIMAL(10,2) NOT NULL,
     currency VARCHAR,
     interest_rate DECIMAL(10,2) NOT NULL,
@@ -112,6 +112,17 @@ CREATE TABLE Loan (
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     loan_status_type INT NOT NULL REFERENCES LoanStatusType(id)
+);
+
+-- Transaction
+CREATE TABLE Transaction (
+    id SERIAL PRIMARY KEY,
+    account_id INT NOT NULL REFERENCES Account(id),
+    employee_id INT REFERENCES Employee(id),
+    type INT NOT NULL REFERENCES TransactionType(id),
+    currency VARCHAR NOT NULL,
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    amount DECIMAL(10,2) NOT NULL
 );
 
 -- LoanPayment
@@ -125,17 +136,6 @@ CREATE TABLE LoanPayment (
     principal_amount DECIMAL(10,2) NOT NULL,
     interest_amount DECIMAL(10,2) NOT NULL,
     paid_amount DECIMAL(10,2) NOT NULL
-);
-
--- Transaction
-CREATE TABLE Transaction (
-    id SERIAL PRIMARY KEY,
-    account_id INT NOT NULL REFERENCES Account(id),
-    employee_id INT REFERENCES Employee(id),
-    type INT NOT NULL REFERENCES TransactionType(id),
-    currency VARCHAR NOT NULL,
-    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    amount DECIMAL(10,2) NOT NULL
 );
 
 -- Card
